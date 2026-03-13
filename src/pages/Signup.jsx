@@ -1,75 +1,81 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  TextField,
-  Button,
-  Typography,
-  Box,
-  CircularProgress
-} from "@mui/material";
+import { Box, Card, TextField, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { signupUser } from "../services/   authService";
 
 const Signup = () => {
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
 
   const navigate = useNavigate();
 
   const handleSignup = async () => {
 
-    try {
+    try{
 
-      setLoading(true);
+      await signupUser(email,password);
 
-      const data = await signupUser(username, password);
-
-      console.log("Signup success:", data);
-
-      alert("Signup Successful");
+      alert("Signup successful");
 
       navigate("/login");
 
-    } catch (error) {
+    }
+    catch(err){
 
-      console.error(error);
-      alert("Signup Failed");
-
-    } finally {
-
-      setLoading(false);
+      alert("Signup failed");
 
     }
 
   };
 
   return (
+
     <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      height="100vh"
-      bgcolor="#f5f5f5"
+      sx={{
+        height:"100vh",
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"center",
+        background:"#f5f5f7"
+      }}
     >
 
-      <Card sx={{ width: 350, p: 2, boxShadow: 5 }}>
+      <Card
+        sx={{
+          width:900,
+          height:500,
+          display:"flex",
+          borderRadius:4,
+          overflow:"hidden"
+        }}
+      >
 
-        <CardContent>
+        {/* LEFT FORM */}
 
-          <Typography variant="h5" align="center" gutterBottom>
-            Sign Up
+        <Box
+          sx={{
+            flex:1,
+            p:6,
+            display:"flex",
+            flexDirection:"column",
+            justifyContent:"center"
+          }}
+        >
+
+          <Typography variant="h4" fontWeight="bold" mb={1}>
+            Kar Mcccccccc!!!!!
+          </Typography>
+
+          <Typography color="text.secondary" mb={4}>
+             See your Gaand Masti!!!!!
           </Typography>
 
           <TextField
             label="Email"
-            type="email"
             fullWidth
             margin="normal"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e)=>setEmail(e.target.value)}
           />
 
           <TextField
@@ -77,26 +83,86 @@ const Signup = () => {
             type="password"
             fullWidth
             margin="normal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e)=>setPassword(e.target.value)}
           />
 
           <Button
             variant="contained"
             fullWidth
-            sx={{ mt: 2 }}
+            sx={{mt:3,height:45}}
             onClick={handleSignup}
-            disabled={loading}
           >
-            {loading ? <CircularProgress size={24} color="inherit" /> : "Sign Up"}
+            Sign Up
           </Button>
 
-        </CardContent>
+          <Typography mt={3} textAlign="center">
+
+            Already have an account?{" "}
+
+            <span
+              style={{color:"#1976d2",cursor:"pointer"}}
+              onClick={()=>navigate("/login")}
+            >
+              Login
+            </span>
+
+          </Typography>
+
+        </Box>
+
+        {/* RIGHT IMAGE */}
+
+        <Box
+  sx={{
+    flex: 1,
+    position: "relative",
+    backgroundImage:
+      "url(https://images.unsplash.com/photo-1534447677768-be436bb09401)",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "white"
+  }}
+>
+
+  {/* Overlay */}
+  <Box
+    sx={{
+      position: "absolute",
+      inset: 0,
+      background: "rgba(0,0,0,0.45)"
+    }}
+  />
+
+  {/* Quote Content */}
+  <Box
+    sx={{
+      position: "relative",
+      textAlign: "center",
+      px: 4
+    }}
+  >
+
+    <Typography variant="h4" fontWeight="bold" mb={2}>
+     Lund Khaye Mera Veg .....
+    </Typography>
+
+    <Typography variant="h6">
+      "Beware of Non Vegetarian........"
+    </Typography>
+
+  </Box>
+
+</Box>
 
       </Card>
 
     </Box>
+
   );
+
 };
 
 export default Signup;

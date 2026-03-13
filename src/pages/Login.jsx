@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, CardContent, TextField, Button, Typography, Box } from "@mui/material";
+import { Box, Card, TextField, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/   authService";
 
@@ -14,20 +14,9 @@ const Login = () => {
 
     try{
 
-      console.log("Username:", username);
-      console.log("Password:", password);
-
       const data = await loginUser(username,password);
 
-      console.log("API Response:", data);
-
-      // save token
-      localStorage.setItem("token", data.token);
-
-      // save user data
       localStorage.setItem("user", JSON.stringify(data));
-
-      console.log("Token saved:", data.token);
 
       navigate("/dashboard");
 
@@ -42,13 +31,45 @@ const Login = () => {
 
   return (
 
-    <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+    <Box
+      sx={{
+        height:"100vh",
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"center",
+        background:"#f5f5f7"
+      }}
+    >
 
-      <Card sx={{width:350,p:2}}>
+      <Card
+        sx={{
+          width:900,
+          height:500,
+          display:"flex",
+          borderRadius:4,
+          overflow:"hidden"
+        }}
+      >
 
-        <CardContent>
+        {/* LEFT SIDE LOGIN FORM */}
 
-          <Typography variant="h5" align="center">Login</Typography>
+        <Box
+          sx={{
+            flex:1,
+            p:6,
+            display:"flex",
+            flexDirection:"column",
+            justifyContent:"center"
+          }}
+        >
+
+          <Typography variant="h4" fontWeight="bold" mb={1}>
+            Hi Laudeeeee!
+          </Typography>
+
+          <Typography color="text.secondary" mb={4}>
+            See your Gaand Masti!!!!!
+          </Typography>
 
           <TextField
             label="Username"
@@ -68,13 +89,73 @@ const Login = () => {
           <Button
             variant="contained"
             fullWidth
-            sx={{mt:2}}
+            sx={{mt:3,height:45}}
             onClick={handleLogin}
           >
-            Login
+            Log In
           </Button>
 
-        </CardContent>
+          <Typography mt={3} textAlign="center">
+
+            Don't have an account?{" "}
+
+            <span
+              style={{color:"#1976d2",cursor:"pointer"}}
+              onClick={()=>navigate("/signup")}
+            >
+              Sign up
+            </span>
+
+          </Typography>
+
+        </Box>
+
+        {/* RIGHT SIDE IMAGE */}
+
+        <Box
+  sx={{
+    flex: 1,
+    position: "relative",
+    backgroundImage:
+      "url(https://images.unsplash.com/photo-1534447677768-be436bb09401)",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "white"
+  }}
+>
+
+  {/* Overlay */}
+  <Box
+    sx={{
+      position: "absolute",
+      inset: 0,
+      background: "rgba(0,0,0,0.45)"
+    }}
+  />
+
+  {/* Quote Content */}
+  <Box
+    sx={{
+      position: "relative",
+      textAlign: "center",
+      px: 4
+    }}
+  >
+
+    <Typography variant="h4" fontWeight="bold" mb={2}>
+      Track Smarter.
+    </Typography>
+
+    <Typography variant="h6">
+      "Small expenses add up — control them before they control you."
+    </Typography>
+
+  </Box>
+
+</Box>
 
       </Card>
 

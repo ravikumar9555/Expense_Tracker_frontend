@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import HomePage from "./pages/Home";
 
 function App() {
 
@@ -11,6 +12,8 @@ function App() {
     <Router>
 
       <Routes>
+        <Route path="/" element={<HomePage />} />
+
 
         <Route path="/login" element={<Login />} />
 

@@ -6,33 +6,42 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 function ExpenseChart({ expenses }) {
 
   const upi = expenses
-    .filter(e => e.platform?.toLowerCase() === "upi")
+    .filter((e) => e.platform?.toLowerCase() === "upi")
     .reduce((sum, e) => sum + Number(e.amount), 0);
 
   const cash = expenses
-    .filter(e => e.platform?.toLowerCase() === "cash")
+    .filter((e) => e.platform?.toLowerCase() === "cash")
     .reduce((sum, e) => sum + Number(e.amount), 0);
 
   const card = expenses
-    .filter(e => e.platform?.toLowerCase() === "card")
+    .filter((e) => e.platform?.toLowerCase() === "card")
     .reduce((sum, e) => sum + Number(e.amount), 0);
 
   const data = {
     labels: ["UPI", "Cash", "Card"],
     datasets: [
       {
-        label: "Expenses",
         data: [upi, cash, card],
-        backgroundColor: ["#3498db", "#2ecc71", "#e74c3c"],
-        borderWidth: 1
+        backgroundColor: [
+          "#3498db",
+          "#2ecc71",
+          "#e74c3c"
+        ]
       }
     ]
   };
 
   return (
-    <div className="chart" style={{ width: "350px", margin: "20px auto" }}>
-      <h3>Expense Distribution</h3>
-      <Pie data={data} />
+    <div style={{ width: "450px", margin: "40px auto" }}>
+      <h2 style={{ textAlign: "center" }}>
+        Expense Distribution
+      </h2>
+
+      {upi === 0 && cash === 0 && card === 0 ? (
+        <p style={{ textAlign: "center" }}>No data available</p>
+      ) : (
+        <Pie data={data} />
+      )}
     </div>
   );
 }

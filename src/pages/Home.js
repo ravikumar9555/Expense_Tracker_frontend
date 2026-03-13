@@ -1,26 +1,84 @@
-import Navbar from "../components/Navbar";
+import React from "react";
+import { Box, Typography, Button, Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-function Home() {
+const HomePage = () => {
+
+  const navigate = useNavigate();
 
   return (
 
-    <div>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundColor: "#f8f9fb",
+        display: "flex",
+        alignItems: "center"
+      }}
+    >
 
-      <Navbar />
+      <Container maxWidth="md" sx={{ textAlign: "center" }}>
 
-      <div className="home">
+        <Typography
+          variant="h3"
+          fontWeight="bold"
+          sx={{ mb: 2 }}
+        >
+          Manage your <span style={{ color: "#ff6b6b" }}>Expenses Easily</span>
+        </Typography>
 
-        <h1>Track Your Expenses Easily</h1>
+        <Typography
+          variant="h6"
+          color="text.secondary"
+          sx={{ mb: 4 }}
+        >
+          Track spending, visualize your expenses, and manage your finances
+          with a clean and simple dashboard.
+        </Typography>
 
-        <p>
-          Manage your monthly and yearly expenses in one place.
-        </p>
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
 
-      </div>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => navigate("/signup")}
+          >
+            Get Started
+          </Button>
 
-    </div>
+          <Button
+            variant="outlined"
+            size="large"
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </Button>
+
+        </Box>
+
+        <Box
+          sx={{
+            mt: 6,
+            borderRadius: 3,
+            boxShadow: 4,
+            overflow: "hidden"
+          }}
+        >
+
+          <img
+            src="https://images.unsplash.com/photo-1554224155-6726b3ff858f"
+            alt="dashboard preview"
+            style={{ width: "100%" }}
+          />
+
+        </Box>
+
+      </Container>
+
+    </Box>
 
   );
-}
 
-export default Home;
+};
+
+export default HomePage;

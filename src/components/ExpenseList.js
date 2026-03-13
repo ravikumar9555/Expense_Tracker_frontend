@@ -1,29 +1,159 @@
 import React from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  IconButton,
+  Avatar
+} from "@mui/material";
 
-function ExpenseList({ expenses }) {
+import EditIcon from "@mui/icons-material/Edit";
+
+function ExpenseList({ expenses, onEdit }) {
+
+  const latestExpenses = expenses.slice(-5).reverse();
 
   return (
 
-    <div>
+    <Box>
 
-      <h3>Expense List</h3>
+      <Typography variant="h5" mb={3}>
+        Latest Expenses
+      </Typography>
 
-      {expenses.length === 0 && <p>No expenses yet</p>}
+      {latestExpenses.length === 0 && (
+        <Typography>No expenses yet</Typography>
+      )}
 
-      {expenses.map((expense) => (
+      {latestExpenses.map((expense,index) => (
 
-        <div key={expense.expenseId} style={{border:"1px solid #ddd",padding:"10px",margin:"5px"}}>
+        <Card
+          key={expense.expenseId}
+          sx={{
+            mb:2,
+            borderRadius:3,
+            transition:"0.3s",
+            overflow:"hidden",
+            boxShadow:"0 6px 18px rgba(0,0,0,0.08)",
+            "&:hover":{
+              transform:"translateY(-4px)",
+              boxShadow:"0 12px 28px rgba(0,0,0,0.15)"
+            },
+            "&:hover .description":{
+              maxHeight:"100px",
+              opacity:1
+            }
+          }}
+        >
 
-          <p>Description: {expense.description}</p>
-          <p>Amount: ₹{expense.amount}</p>
-          <p>Platform: {expense.platform}</p>
-          <p>Date: {expense.transactionDate}</p>
+          <CardContent>
 
-        </div>
+            {/* MAIN ROW */}
+
+            <Box
+              sx={{
+                display:"flex",
+                alignItems:"center",
+                justifyContent:"space-between"
+              }}
+            >
+
+              {/* LEFT CONTENT */}
+
+              <Box
+                sx={{
+                  display:"flex",
+                  alignItems:"center",
+                  gap:4   // spacing between items
+                }}
+              >
+
+                {/* NUMBER */}
+
+                <Avatar
+                  sx={{
+                    width:32,
+                    height:32,
+                    fontSize:"14px",
+                    background:"#f0f0f0",
+                    color:"#555"
+                  }}
+                >
+                  {index+1}
+                </Avatar>
+
+                {/* AMOUNT */}
+
+                <Typography
+                  fontWeight="bold"
+                  sx={{
+                    fontSize:"18px",
+                    color:
+                      expense.amount > 1000
+                        ? "#e53935"
+                        : "#2e7d32"
+                  }}
+                >
+                  ₹{expense.amount}
+                </Typography>
+
+                {/* PAYMENT MODE */}
+
+                <Typography color="text.secondary">
+                  {expense.platform}
+                </Typography>
+
+                {/* DATE */}
+
+                <Typography color="text.secondary">
+                  {expense.transactionDate}
+                </Typography>
+
+              </Box>
+
+              {/* EDIT BUTTON */}
+
+              <IconButton
+                onClick={()=>onEdit(expense)}
+                sx={{
+                  background:"#f5f5f5",
+                  "&:hover":{
+                    background:"#eaeaea"
+                  }
+                }}
+              >
+                <EditIcon/>
+              </IconButton>
+
+            </Box>
+
+            {/* DESCRIPTION ON HOVER */}
+
+            <Box
+              className="description"
+              sx={{
+                maxHeight:0,
+                opacity:0,
+                transition:"all 0.3s ease",
+                overflow:"hidden",
+                mt:2
+              }}
+            >
+
+              <Typography variant="body2" color="text.secondary">
+                Purpose: {expense.description}
+              </Typography>
+
+            </Box>
+
+          </CardContent>
+
+        </Card>
 
       ))}
 
-    </div>
+    </Box>
 
   );
 
