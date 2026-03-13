@@ -7,7 +7,9 @@ import ExpenseChart from "../components/ExpenseChart";
 
 function Dashboard() {
 
-  const [expenses, setExpenses] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const [expenses, setExpenses] = useState(user?.expenses || []);
 
   const addExpense = (expense) => {
     setExpenses([...expenses, expense]);

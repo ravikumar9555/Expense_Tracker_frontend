@@ -1,32 +1,88 @@
+import React from "react";
+import { Card, CardContent, Typography, Grid, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+
 function SummaryCards({ expenses }) {
 
   const total = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
-  const monthly = total; 
-  const yearly = total;
-
   return (
 
-    <div className="cards">
+    <div style={{ marginBottom: "20px" }}>
 
-      <div className="card">
-        <h3>Total Expense</h3>
-        <p>₹{total}</p>
-      </div>
+      <Typography variant="h5" gutterBottom>
+        Expense Summary
+      </Typography>
 
-      <div className="card">
-        <h3>Monthly</h3>
-        <p>₹{monthly}</p>
-      </div>
+      {/* Summary Cards */}
+      <Grid container spacing={2}>
 
-      <div className="card">
-        <h3>Yearly</h3>
-        <p>₹{yearly}</p>
-      </div>
+        <Grid item xs={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography variant="subtitle1">Total Expenses</Typography>
+              <Typography variant="h6">₹{total}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography variant="subtitle1">Transactions</Typography>
+              <Typography variant="h6">{expenses.length}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+      </Grid>
+
+      {/* Expense Table */}
+      <Card style={{ marginTop: "20px" }}>
+
+        <CardContent>
+
+          <Typography variant="h6" gutterBottom>
+            Expense Details
+          </Typography>
+
+          <Table>
+
+            <TableHead>
+              <TableRow>
+                  <TableCell>Amount</TableCell>
+                <TableCell>Description</TableCell>
+              
+                <TableCell>Platform</TableCell>
+                <TableCell>Date</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+
+              {expenses.map((expense) => (
+
+                <TableRow key={expense.expenseId}>
+                  <TableCell>₹{expense.amount}</TableCell>
+                  <TableCell>{expense.description}</TableCell>
+                  
+                  <TableCell>{expense.platform}</TableCell>
+                  <TableCell>{expense.transactionDate}</TableCell>
+                </TableRow>
+
+              ))}
+
+            </TableBody>
+
+          </Table>
+
+        </CardContent>
+
+      </Card>
 
     </div>
 
   );
+
 }
 
 export default SummaryCards;
