@@ -34,31 +34,47 @@ function ExpenseList({ expenses, setExpenses }) {
     });
   };
 
-  const handleUpdate = async ()=>{
+  const handleUpdate = async () => {
 
-    const updated = await updateExpenseApi(editId,form);
+  try {
+
+    const updated = await updateExpenseApi(form);
 
     setExpenses(prev =>
       prev.map(e =>
-        e.expenseId === editId ? updated : e
+        e.expenseId === form.expenseId ? form : e
       )
     );
 
     setEditId(null);
-  };
 
-  const handleDelete = async ()=>{
+  } catch (err) {
 
-    await deleteExpenseApi(editId);
+    console.error("Update failed", err);
+
+  }
+
+};
+
+  const handleDelete = async (expenseId) => {
+
+  try {
+
+    await deleteExpenseApi(expenseId);
 
     setExpenses(prev =>
-      prev.filter(e =>
-        e.expenseId !== editId
-      )
+      prev.filter(e => e.expenseId !== expenseId)
     );
 
     setEditId(null);
-  };
+
+  } catch (err) {
+
+    console.error("Delete failed", err);
+
+  }
+
+};
 
   return (
 
@@ -75,7 +91,11 @@ function ExpenseList({ expenses, setExpenses }) {
             sx={{
               mb:2,
               borderRadius:3,
-              boxShadow:"0 6px 18px rgba(0,0,0,0.08)"
+              boxShadow:"0 6px 18px rgba(0,0,0,0.08)",
+              transition:"0.25s",
+              "&:hover":{
+                boxShadow:"0 12px 25px rgba(0,0,0,0.15)"
+              }
             }}
           >
 
@@ -95,7 +115,7 @@ function ExpenseList({ expenses, setExpenses }) {
                     name="amount"
                     value={form.amount}
                     onChange={handleChange}
-                    sx={{width:100}}
+                    sx={{width:120}}
                   />
 
                   <TextField
@@ -121,9 +141,9 @@ function ExpenseList({ expenses, setExpenses }) {
 
               ) : (
 
-                <Box sx={{display:"flex",gap:4}}>
+                <Box sx={{display:"flex",gap:4,alignItems:"center"}}>
 
-                  <Typography>
+                  <Typography fontWeight="bold">
                     {index+1}
                   </Typography>
 
@@ -133,7 +153,8 @@ function ExpenseList({ expenses, setExpenses }) {
                       color:
                         Number(expense.amount)>1000
                           ? "#e53935"
-                          : "#2e7d32"
+                          : "#2e7d32",
+                      fontSize:"18px"
                     }}
                   >
                     ₹{expense.amount}
@@ -156,6 +177,7 @@ function ExpenseList({ expenses, setExpenses }) {
                 {editing ? (
 
                   <>
+
                     <IconButton
                       color="success"
                       onClick={handleUpdate}
@@ -165,10 +187,11 @@ function ExpenseList({ expenses, setExpenses }) {
 
                     <IconButton
                       color="error"
-                      onClick={handleDelete}
+                      onClick={()=>handleDelete(form.expenseId)}
                     >
                       <DeleteIcon/>
                     </IconButton>
+
                   </>
 
                 ) : (

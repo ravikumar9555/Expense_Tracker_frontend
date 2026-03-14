@@ -1,7 +1,7 @@
 import api from "../api/axiosConfig";
 
 
-// LOGIN API
+// LOGIN
 export const loginUser = async (username, password) => {
 
   const response = await api.post("/login", {
@@ -10,11 +10,10 @@ export const loginUser = async (username, password) => {
   });
 
   return response.data;
-
 };
 
 
-// SIGNUP API
+// SIGNUP
 export const signupUser = async (username, password) => {
 
   const response = await api.post("/signup", {
@@ -23,7 +22,6 @@ export const signupUser = async (username, password) => {
   });
 
   return response.data;
-
 };
 
 
@@ -33,34 +31,27 @@ export const addExpenseApi = async (expense) => {
   const response = await api.post("/addExpense", expense);
 
   return response.data;
-
 };
 
 
-// // GET ALL EXPENSES
-// export const getExpensesApi = async () => {
 
-//   const response = await api.get("/expenses");
+export const updateExpenseApi = async (expense) => {
 
-//   return response.data;
-
-// };
-
-
-// UPDATE EXPENSE
-export const updateExpenseApi = async (id, expense) => {
-
-  const response = await api.put(`/expenses/${id}`, expense);
+  const response = await api.post("/updateExpense", {
+    expenseId: expense.expenseId,
+    description: expense.description,
+    amount: Number(expense.amount),
+    platform: expense.platform,
+    transactionDate: expense.transactionDate
+  });
 
   return response.data;
-
 };
 
 
-// DELETE EXPENSE
-export const deleteExpenseApi = async (id) => {
+export const deleteExpenseApi = async (expenseId) => {
 
-  const response = await api.delete(`/expenses/${id}`);
+  const response = await api.delete(`/deleteExpense/${expenseId}`);
 
   return response.data;
 
