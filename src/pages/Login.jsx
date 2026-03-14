@@ -16,6 +16,10 @@ const Login = () => {
 
       const data = await loginUser(username,password);
 
+      // store token
+      localStorage.setItem("token", data.token);
+
+      // store user data (optional)
       localStorage.setItem("user", JSON.stringify(data));
 
       navigate("/dashboard");
@@ -24,6 +28,7 @@ const Login = () => {
     catch(err){
 
       alert("Invalid login");
+      console.log(err)
 
     }
 
@@ -64,11 +69,11 @@ const Login = () => {
         >
 
           <Typography variant="h4" fontWeight="bold" mb={1}>
-            Hi Laudeeeee!
+            Welcome Back
           </Typography>
 
           <Typography color="text.secondary" mb={4}>
-            See your Gaand Masti!!!!!
+            Login to manage your expenses.
           </Typography>
 
           <TextField
@@ -113,49 +118,51 @@ const Login = () => {
         {/* RIGHT SIDE IMAGE */}
 
         <Box
-  sx={{
-    flex: 1,
-    position: "relative",
-    backgroundImage:
-      "url(https://images.unsplash.com/photo-1534447677768-be436bb09401)",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "white"
-  }}
->
+          sx={{
+            flex: 1,
+            position: "relative",
+            backgroundImage:
+              "url(https://images.unsplash.com/photo-1534447677768-be436bb09401)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white"
+          }}
+        >
 
-  {/* Overlay */}
-  <Box
-    sx={{
-      position: "absolute",
-      inset: 0,
-      background: "rgba(0,0,0,0.45)"
-    }}
-  />
+          {/* Overlay */}
 
-  {/* Quote Content */}
-  <Box
-    sx={{
-      position: "relative",
-      textAlign: "center",
-      px: 4
-    }}
-  >
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              background: "rgba(0,0,0,0.45)"
+            }}
+          />
 
-    <Typography variant="h4" fontWeight="bold" mb={2}>
-      Track Smarter.
-    </Typography>
+          {/* Quote */}
 
-    <Typography variant="h6">
-      "Small expenses add up — control them before they control you."
-    </Typography>
+          <Box
+            sx={{
+              position: "relative",
+              textAlign: "center",
+              px: 4
+            }}
+          >
 
-  </Box>
+            <Typography variant="h4" fontWeight="bold" mb={2}>
+              Track Smarter
+            </Typography>
 
-</Box>
+            <Typography variant="h6">
+              "Small expenses add up — control them before they control you."
+            </Typography>
+
+          </Box>
+
+        </Box>
 
       </Card>
 

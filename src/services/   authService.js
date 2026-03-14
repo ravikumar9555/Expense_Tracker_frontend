@@ -27,7 +27,7 @@ export const signupUser = async (username, password) => {
 };
 
 
-// ADD EXPENSE API
+// ADD EXPENSE
 export const addExpenseApi = async (expense) => {
 
   const response = await api.post("/expenses", expense);
@@ -37,7 +37,7 @@ export const addExpenseApi = async (expense) => {
 };
 
 
-// GET USER EXPENSES
+// GET ALL EXPENSES
 export const getExpensesApi = async () => {
 
   const response = await api.get("/expenses");

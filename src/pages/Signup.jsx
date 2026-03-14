@@ -5,7 +5,7 @@ import { signupUser } from "../services/   authService";
 
 const Signup = () => {
 
-  const [email,setEmail] = useState("");
+  const [username,setUsername] = useState("");
   const [password,setPassword] = useState("");
 
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const Signup = () => {
 
     try{
 
-      await signupUser(email,password);
+      await signupUser(username,password);
 
       alert("Signup successful");
 
@@ -75,7 +75,7 @@ const Signup = () => {
             label="Email"
             fullWidth
             margin="normal"
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={(e)=>setUsername(e.target.value)}
           />
 
           <TextField
