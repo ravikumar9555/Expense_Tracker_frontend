@@ -37,7 +37,7 @@ export const addExpenseApi = async (expense) => {
 
 export const updateExpenseApi = async (expense) => {
 
-  const response = await api.post("/updateExpense", {
+  const response = await api.put("/updateExpense", {
     expenseId: expense.expenseId,
     description: expense.description,
     amount: Number(expense.amount),
@@ -46,8 +46,8 @@ export const updateExpenseApi = async (expense) => {
   });
 
   return response.data;
-};
 
+};
 
 export const deleteExpenseApi = async (expenseId) => {
 
