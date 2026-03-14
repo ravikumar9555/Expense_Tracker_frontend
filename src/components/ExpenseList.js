@@ -38,7 +38,7 @@ function ExpenseList({ expenses, setExpenses }) {
 
   try {
 
-    const updated = await updateExpenseApi(form);
+      await updateExpenseApi(form);
 
     setExpenses(prev =>
       prev.map(e =>
