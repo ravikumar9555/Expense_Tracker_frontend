@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Box, Card, TextField, Button } from "@mui/material";
 
+import { addExpenseApi } from "../services/   authService";
+
 function ExpenseForm({ addExpense }) {
 
   const [description,setDescription] = useState("");
@@ -8,22 +10,42 @@ function ExpenseForm({ addExpense }) {
   const [platform,setPlatform] = useState("");
   const [date,setDate] = useState("");
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
 
-    const expense = {
-      expenseId: Date.now(),
-      description,
-      amount: Number(amount),   // ✅ FIX (prevents NaN)
-      platform,
-      transactionDate: date
-    };
+    // simple validation
+    if(!description || !amount || !platform || !date){
+      alert("All fields are required");
+      return;
+    }
 
-    addExpense(expense);
+    try{
 
-    setDescription("");
-    setAmount("");
-    setPlatform("");
-    setDate("");
+      const expense = {
+        description,
+        amount:Number(amount),
+        platform,
+        transactionDate:date
+      };
+
+      // call backend
+      await addExpenseApi(expense);
+
+      // tell dashboard to reload
+      addExpense();
+
+      // clear form
+      setDescription("");
+      setAmount("");
+      setPlatform("");
+      setDate("");
+
+    }
+    catch(err){
+
+      console.log("Add expense error:",err);
+
+    }
+
   };
 
   return (

@@ -1,58 +1,112 @@
 import api from "../api/axiosConfig";
 
+/* ================= AUTH ================= */
 
 // LOGIN
 export const loginUser = async (username, password) => {
+  try {
 
-  const response = await api.post("/login", {
-    username,
-    password
-  });
+    const { data } = await api.post("/login", {
+      username,
+      password
+    });
 
-  return response.data;
+    return data;
+
+  } catch (error) {
+
+    console.error("Login error:", error);
+    throw error;
+
+  }
 };
 
 
 // SIGNUP
 export const signupUser = async (username, password) => {
+  try {
 
-  const response = await api.post("/signup", {
-    username,
-    password
-  });
+    const { data } = await api.post("/signup", {
+      username,
+      password
+    });
 
-  return response.data;
+    return data;
+
+  } catch (error) {
+
+    console.error("Signup error:", error);
+    throw error;
+
+  }
 };
 
+
+/* ================= EXPENSE ================= */
 
 // ADD EXPENSE
 export const addExpenseApi = async (expense) => {
+  try {
 
-  const response = await api.post("/addExpense", expense);
+    const { data } = await api.post("/addExpense", expense);
 
-  return response.data;
+    return data;
+
+  } catch (error) {
+
+    console.error("Add expense error:", error);
+    throw error;
+
+  }
 };
 
 
-
+// UPDATE EXPENSE
 export const updateExpenseApi = async (expense) => {
+  try {
 
-  const response = await api.put("/updateExpense", {
-    expenseId: expense.expenseId,
-    description: expense.description,
-    amount: Number(expense.amount),
-    platform: expense.platform,
-    transactionDate: expense.transactionDate
-  });
+    const { data } = await api.put("/updateExpense", expense);
 
-  return response.data;
+    return data;
 
+  } catch (error) {
+
+    console.error("Update expense error:", error);
+    throw error;
+
+  }
 };
 
+
+// DELETE EXPENSE
 export const deleteExpenseApi = async (expenseId) => {
+  try {
 
-  const response = await api.delete(`/deleteExpense/${expenseId}`);
+    const { data } = await api.delete(`/deleteExpense/${expenseId}`);
 
-  return response.data;
+    return data;
 
+  } catch (error) {
+
+    console.error("Delete expense error:", error);
+    throw error;
+
+  }
+};
+
+
+// GET EXPENSES (PAGINATION)
+export const getExpensesApi = async (page, size) => {
+  try {
+
+    const { data } = await api.get(`/getExpenses?page=${page}&size=${size}`);
+
+    return data;
+
+  } catch (error) {
+
+    console.error("Get expenses error:", error);
+    throw error;
+
+  }
 };

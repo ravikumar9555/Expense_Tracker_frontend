@@ -1,36 +1,64 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./routes/ProtectedRoute";
 import HomePage from "./pages/Home";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+import PublicRoute from "./routes/PublicRoute";
+
+const queryClient = new QueryClient();
 
 function App() {
 
   return (
 
-    <Router>
+    <QueryClientProvider client={queryClient}>
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
+      <Router>
 
+        <Routes>
 
-        <Route path="/login" element={<Login />} />
+          {/* Home */}
+          <Route path="/" element={<HomePage />} />
 
-        <Route path="/signup" element={<Signup />} />
+          {/* Login */}
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
 
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+          {/* Signup */}
+          <Route
+            path="/signup"
+            element={
+              <PublicRoute>
+                <Signup />
+              </PublicRoute>
+            }
+          />
 
-      </Routes>
+          {/* Dashboard */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-    </Router>
+        </Routes>
+
+      </Router>
+
+    </QueryClientProvider>
 
   );
 

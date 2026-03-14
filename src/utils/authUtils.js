@@ -1,18 +1,41 @@
-import { jwtDecode } from "jwt-decode";
+export const isTokenValid = () => {
 
-export const isTokenExpired = (token) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return false;
+  }
 
   try {
 
-    const decoded = jwtDecode(token);
+    const payload = JSON.parse(atob(token.split(".")[1]));
 
-    const currentTime = Date.now() / 1000;
+    // if token has no expiry → treat as invalid
+    if (!payload.exp) {
+      return false;
+    }
 
-    return decoded.exp < currentTime;
+    const expiryTime = payload.exp * 1000; // convert to milliseconds
+
+    // token expired
+    if (Date.now() > expiryTime) {
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+
+      return false;
+
+    }
+
+    return true;
 
   } catch (error) {
 
-    return true;
+    // token format invalid
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+
+    return false;
 
   }
 

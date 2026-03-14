@@ -17,70 +17,60 @@ import {
   deleteExpenseApi
 } from "../services/   authService";
 
-function ExpenseList({ expenses, setExpenses }) {
+function ExpenseList({ expenses = [], reloadExpenses }) {
 
-  const [editId,setEditId] = useState(null);
-  const [form,setForm] = useState({});
+  const [editId, setEditId] = useState(null);
+  const [form, setForm] = useState({});
 
-  const handleEdit = (expense)=>{
+  const handleEdit = (expense) => {
     setEditId(expense.expenseId);
     setForm(expense);
   };
 
-  const handleChange = (e)=>{
+  const handleChange = (e) => {
     setForm({
       ...form,
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value
     });
   };
 
+  // UPDATE EXPENSE
   const handleUpdate = async () => {
-
-  try {
+    try {
 
       await updateExpenseApi(form);
 
-    setExpenses(prev =>
-      prev.map(e =>
-        e.expenseId === form.expenseId ? form : e
-      )
-    );
+      setEditId(null);
 
-    setEditId(null);
+      if (reloadExpenses) {
+        reloadExpenses();
+      }
 
-  } catch (err) {
+    } catch (err) {
+      console.log("Update error:", err);
+    }
+  };
 
-    console.error("Update failed", err);
-
-  }
-
-};
-
+  // DELETE EXPENSE
   const handleDelete = async (expenseId) => {
+    try {
 
-  try {
+      await deleteExpenseApi(expenseId);
 
-    await deleteExpenseApi(expenseId);
+      if (reloadExpenses) {
+        reloadExpenses();
+      }
 
-    setExpenses(prev =>
-      prev.filter(e => e.expenseId !== expenseId)
-    );
-
-    setEditId(null);
-
-  } catch (err) {
-
-    console.error("Delete failed", err);
-
-  }
-
-};
+    } catch (err) {
+      console.log("Delete error:", err);
+    }
+  };
 
   return (
 
     <Box>
 
-      {expenses.map((expense,index)=>{
+      {expenses.map((expense, index) => {
 
         const editing = editId === expense.expenseId;
 
@@ -113,27 +103,27 @@ function ExpenseList({ expenses, setExpenses }) {
 
                   <TextField
                     name="amount"
-                    value={form.amount}
+                    value={form.amount || ""}
                     onChange={handleChange}
                     sx={{width:120}}
                   />
 
                   <TextField
                     name="description"
-                    value={form.description}
+                    value={form.description || ""}
                     onChange={handleChange}
                   />
 
                   <TextField
                     name="platform"
-                    value={form.platform}
+                    value={form.platform || ""}
                     onChange={handleChange}
                   />
 
                   <TextField
                     type="date"
                     name="transactionDate"
-                    value={form.transactionDate}
+                    value={form.transactionDate || ""}
                     onChange={handleChange}
                   />
 
@@ -144,14 +134,14 @@ function ExpenseList({ expenses, setExpenses }) {
                 <Box sx={{display:"flex",gap:4,alignItems:"center"}}>
 
                   <Typography fontWeight="bold">
-                    {index+1}
+                    {index + 1}
                   </Typography>
 
                   <Typography
                     fontWeight="bold"
                     sx={{
                       color:
-                        Number(expense.amount)>1000
+                        Number(expense.amount) > 1000
                           ? "#e53935"
                           : "#2e7d32",
                       fontSize:"18px"
@@ -177,7 +167,6 @@ function ExpenseList({ expenses, setExpenses }) {
                 {editing ? (
 
                   <>
-
                     <IconButton
                       color="success"
                       onClick={handleUpdate}
@@ -187,17 +176,16 @@ function ExpenseList({ expenses, setExpenses }) {
 
                     <IconButton
                       color="error"
-                      onClick={()=>handleDelete(form.expenseId)}
+                      onClick={() => handleDelete(expense.expenseId)}
                     >
                       <DeleteIcon/>
                     </IconButton>
-
                   </>
 
                 ) : (
 
                   <IconButton
-                    onClick={()=>handleEdit(expense)}
+                    onClick={() => handleEdit(expense)}
                   >
                     <EditIcon/>
                   </IconButton>

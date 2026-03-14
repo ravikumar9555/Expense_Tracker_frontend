@@ -1,39 +1,89 @@
-import React, { useState } from "react";
-import { Box, Card, TextField, Typography, Button } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  Card,
+  TextField,
+  Typography,
+  Button,
+  Snackbar,
+  Alert,
+  CircularProgress
+} from "@mui/material";
+
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/   authService";
+import { isTokenValid } from "../utils/authUtils";
 
 const Login = () => {
 
   const [username,setUsername] = useState("");
   const [password,setPassword] = useState("");
 
+  const [open,setOpen] = useState(false);
+  const [message,setMessage] = useState("");
+  const [severity,setSeverity] = useState("success");
+
+  const [loading,setLoading] = useState(false);
+
   const navigate = useNavigate();
 
-  // handleLogin
-const handleLogin = async () => {
+  // ✅ If token already valid → go dashboard
+  useEffect(()=>{
 
-  try {
+    if(isTokenValid()){
+      navigate("/dashboard",{replace:true});
+    }
 
-    const response = await loginUser(username, password);
+  },[]);
 
-    console.log(response);
+  const handleLogin = async () => {
 
-    // store JWT token
-    localStorage.setItem("token", response.token);
+    if(!username || !password){
 
-    // store user data
-    localStorage.setItem("user", JSON.stringify(response.data));
+      setMessage("All fields are mandatory");
+      setSeverity("error");
+      setOpen(true);
+      return;
 
-    navigate("/dashboard");
+    }
 
-  } catch (err) {
+    try {
 
-    alert("Invalid login");
+      setLoading(true);
 
-  }
+      const response = await loginUser(username, password);
 
-};
+      console.log(response);
+
+      // ✅ store token
+      localStorage.setItem("token", response.token);
+
+      // ✅ store username
+      localStorage.setItem("username", response.username);
+
+      setMessage("Login successful");
+      setSeverity("success");
+      setOpen(true);
+
+      // ✅ replace prevents back navigation
+      setTimeout(()=>{
+        navigate("/dashboard",{replace:true});
+      },1000);
+
+    } catch (err) {
+
+      setMessage("Invalid username or password");
+      setSeverity("error");
+      setOpen(true);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
   return (
 
     <Box
@@ -56,7 +106,7 @@ const handleLogin = async () => {
         }}
       >
 
-        {/* LEFT SIDE LOGIN FORM */}
+        {/* LEFT LOGIN FORM */}
 
         <Box
           sx={{
@@ -96,8 +146,15 @@ const handleLogin = async () => {
             fullWidth
             sx={{mt:3,height:45}}
             onClick={handleLogin}
+            disabled={loading}
           >
-            Log In
+
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "Log In"
+            )}
+
           </Button>
 
           <Typography mt={3} textAlign="center">
@@ -115,40 +172,36 @@ const handleLogin = async () => {
 
         </Box>
 
-        {/* RIGHT SIDE IMAGE */}
+        {/* RIGHT IMAGE */}
 
         <Box
           sx={{
-            flex: 1,
-            position: "relative",
+            flex:1,
+            position:"relative",
             backgroundImage:
               "url(https://images.unsplash.com/photo-1534447677768-be436bb09401)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white"
+            backgroundSize:"cover",
+            backgroundPosition:"center",
+            display:"flex",
+            alignItems:"center",
+            justifyContent:"center",
+            color:"white"
           }}
         >
 
-          {/* Overlay */}
-
           <Box
             sx={{
-              position: "absolute",
-              inset: 0,
-              background: "rgba(0,0,0,0.45)"
+              position:"absolute",
+              inset:0,
+              background:"rgba(0,0,0,0.45)"
             }}
           />
 
-          {/* Quote */}
-
           <Box
             sx={{
-              position: "relative",
-              textAlign: "center",
-              px: 4
+              position:"relative",
+              textAlign:"center",
+              px:4
             }}
           >
 
@@ -165,6 +218,19 @@ const handleLogin = async () => {
         </Box>
 
       </Card>
+
+      {/* SNACKBAR */}
+
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={()=>setOpen(false)}
+        anchorOrigin={{vertical:"top",horizontal:"center"}}
+      >
+        <Alert severity={severity} variant="filled">
+          {message}
+        </Alert>
+      </Snackbar>
 
     </Box>
 
