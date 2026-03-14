@@ -24,14 +24,11 @@ const Signup = () => {
 
   const navigate = useNavigate();
 
-  // ✅ If already logged in → go dashboard
   useEffect(()=>{
-
-    if(isTokenValid()){
-      navigate("/dashboard",{replace:true});
-    }
-
-  },[]);
+  if(isTokenValid()){
+    navigate("/dashboard",{replace:true});
+  }
+},[navigate]);
 
   const handleSignup = async () => {
 

@@ -27,14 +27,11 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // ✅ If token already valid → go dashboard
-  useEffect(()=>{
-
-    if(isTokenValid()){
-      navigate("/dashboard",{replace:true});
-    }
-
-  },[]);
+ useEffect(()=>{
+  if(isTokenValid()){
+    navigate("/dashboard",{replace:true});
+  }
+},[navigate]);
 
   const handleLogin = async () => {
 
