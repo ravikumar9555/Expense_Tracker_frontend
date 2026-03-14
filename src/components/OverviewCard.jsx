@@ -15,8 +15,10 @@ import {
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
 function OverviewCard({ expenses }) {
-
-  const total = expenses.reduce((sum,e)=>sum+Number(e.amount),0);
+const total = expenses.reduce(
+  (sum,e)=>sum + Number(e.amount || 0),
+  0
+);
   const transactions = expenses.length;
 
   const data = {

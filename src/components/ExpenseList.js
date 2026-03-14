@@ -1,157 +1,195 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
   CardContent,
   Typography,
   IconButton,
-  Avatar
+  TextField
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
+import CheckIcon from "@mui/icons-material/Check";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-function ExpenseList({ expenses, onEdit }) {
+import {
+  updateExpenseApi,
+  deleteExpenseApi
+} from "../services/   authService";
 
-  const latestExpenses = expenses.slice(-5).reverse();
+function ExpenseList({ expenses, setExpenses }) {
+
+  const [editId,setEditId] = useState(null);
+  const [form,setForm] = useState({});
+
+  const handleEdit = (expense)=>{
+    setEditId(expense.expenseId);
+    setForm(expense);
+  };
+
+  const handleChange = (e)=>{
+    setForm({
+      ...form,
+      [e.target.name]:e.target.value
+    });
+  };
+
+  const handleUpdate = async ()=>{
+
+    const updated = await updateExpenseApi(editId,form);
+
+    setExpenses(prev =>
+      prev.map(e =>
+        e.expenseId === editId ? updated : e
+      )
+    );
+
+    setEditId(null);
+  };
+
+  const handleDelete = async ()=>{
+
+    await deleteExpenseApi(editId);
+
+    setExpenses(prev =>
+      prev.filter(e =>
+        e.expenseId !== editId
+      )
+    );
+
+    setEditId(null);
+  };
 
   return (
 
     <Box>
 
-      <Typography variant="h5" mb={3}>
-        Latest Expenses
-      </Typography>
+      {expenses.map((expense,index)=>{
 
-      {latestExpenses.length === 0 && (
-        <Typography>No expenses yet</Typography>
-      )}
+        const editing = editId === expense.expenseId;
 
-      {latestExpenses.map((expense,index) => (
+        return (
 
-        <Card
-          key={expense.expenseId}
-          sx={{
-            mb:2,
-            borderRadius:3,
-            transition:"0.3s",
-            overflow:"hidden",
-            boxShadow:"0 6px 18px rgba(0,0,0,0.08)",
-            "&:hover":{
-              transform:"translateY(-4px)",
-              boxShadow:"0 12px 28px rgba(0,0,0,0.15)"
-            },
-            "&:hover .description":{
-              maxHeight:"100px",
-              opacity:1
-            }
-          }}
-        >
+          <Card
+            key={expense.expenseId}
+            sx={{
+              mb:2,
+              borderRadius:3,
+              boxShadow:"0 6px 18px rgba(0,0,0,0.08)"
+            }}
+          >
 
-          <CardContent>
-
-            {/* MAIN ROW */}
-
-            <Box
+            <CardContent
               sx={{
                 display:"flex",
-                alignItems:"center",
-                justifyContent:"space-between"
+                justifyContent:"space-between",
+                alignItems:"center"
               }}
             >
 
-              {/* LEFT CONTENT */}
+              {editing ? (
 
-              <Box
-                sx={{
-                  display:"flex",
-                  alignItems:"center",
-                  gap:4   // spacing between items
-                }}
-              >
+                <Box sx={{display:"flex",gap:2}}>
 
-                {/* NUMBER */}
+                  <TextField
+                    name="amount"
+                    value={form.amount}
+                    onChange={handleChange}
+                    sx={{width:100}}
+                  />
 
-                <Avatar
-                  sx={{
-                    width:32,
-                    height:32,
-                    fontSize:"14px",
-                    background:"#f0f0f0",
-                    color:"#555"
-                  }}
-                >
-                  {index+1}
-                </Avatar>
+                  <TextField
+                    name="description"
+                    value={form.description}
+                    onChange={handleChange}
+                  />
 
-                {/* AMOUNT */}
+                  <TextField
+                    name="platform"
+                    value={form.platform}
+                    onChange={handleChange}
+                  />
 
-                <Typography
-                  fontWeight="bold"
-                  sx={{
-                    fontSize:"18px",
-                    color:
-                      expense.amount > 1000
-                        ? "#e53935"
-                        : "#2e7d32"
-                  }}
-                >
-                  ₹{expense.amount}
-                </Typography>
+                  <TextField
+                    type="date"
+                    name="transactionDate"
+                    value={form.transactionDate}
+                    onChange={handleChange}
+                  />
 
-                {/* PAYMENT MODE */}
+                </Box>
 
-                <Typography color="text.secondary">
-                  {expense.platform}
-                </Typography>
+              ) : (
 
-                {/* DATE */}
+                <Box sx={{display:"flex",gap:4}}>
 
-                <Typography color="text.secondary">
-                  {expense.transactionDate}
-                </Typography>
+                  <Typography>
+                    {index+1}
+                  </Typography>
+
+                  <Typography
+                    fontWeight="bold"
+                    sx={{
+                      color:
+                        Number(expense.amount)>1000
+                          ? "#e53935"
+                          : "#2e7d32"
+                    }}
+                  >
+                    ₹{expense.amount}
+                  </Typography>
+
+                  <Typography>
+                    {expense.platform}
+                  </Typography>
+
+                  <Typography>
+                    {expense.transactionDate}
+                  </Typography>
+
+                </Box>
+
+              )}
+
+              <Box>
+
+                {editing ? (
+
+                  <>
+                    <IconButton
+                      color="success"
+                      onClick={handleUpdate}
+                    >
+                      <CheckIcon/>
+                    </IconButton>
+
+                    <IconButton
+                      color="error"
+                      onClick={handleDelete}
+                    >
+                      <DeleteIcon/>
+                    </IconButton>
+                  </>
+
+                ) : (
+
+                  <IconButton
+                    onClick={()=>handleEdit(expense)}
+                  >
+                    <EditIcon/>
+                  </IconButton>
+
+                )}
 
               </Box>
 
-              {/* EDIT BUTTON */}
+            </CardContent>
 
-              <IconButton
-                onClick={()=>onEdit(expense)}
-                sx={{
-                  background:"#f5f5f5",
-                  "&:hover":{
-                    background:"#eaeaea"
-                  }
-                }}
-              >
-                <EditIcon/>
-              </IconButton>
+          </Card>
 
-            </Box>
+        );
 
-            {/* DESCRIPTION ON HOVER */}
-
-            <Box
-              className="description"
-              sx={{
-                maxHeight:0,
-                opacity:0,
-                transition:"all 0.3s ease",
-                overflow:"hidden",
-                mt:2
-              }}
-            >
-
-              <Typography variant="body2" color="text.secondary">
-                Purpose: {expense.description}
-              </Typography>
-
-            </Box>
-
-          </CardContent>
-
-        </Card>
-
-      ))}
+      })}
 
     </Box>
 

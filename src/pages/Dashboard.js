@@ -9,20 +9,24 @@ import OverviewCard from "../components/OverviewCard";
 
 function Dashboard() {
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const [expenses, setExpenses] = useState(user?.expenses || []);
   const [page, setPage] = useState("overview");
+  const [showAddForm, setShowAddForm] = useState(false);
 
+  // Add Expense
   const addExpense = (expense) => {
-    setExpenses([...expenses, expense]);
+    setExpenses(prev => [expense, ...prev]);
+    setShowAddForm(false);
   };
 
-  const latest = expenses.slice(-5).reverse();
+  // Latest 5 expenses
+  const latest = expenses.slice(0,5);
 
   const now = new Date();
 
-  // Monthly expenses
+  // Monthly Expenses
   const monthlyExpenses = expenses.filter((e) => {
     const d = new Date(e.transactionDate);
     return (
@@ -31,19 +35,19 @@ function Dashboard() {
     );
   });
 
-  // Yearly expenses
+  // Yearly Expenses
   const yearlyExpenses = expenses.filter((e) => {
     const d = new Date(e.transactionDate);
     return d.getFullYear() === now.getFullYear();
   });
 
-  // Monthly total
+  // Monthly Total
   const monthlyTotal = monthlyExpenses.reduce(
     (sum, e) => sum + Number(e.amount),
     0
   );
 
-  // Yearly total
+  // Yearly Total
   const yearlyTotal = yearlyExpenses.reduce(
     (sum, e) => sum + Number(e.amount),
     0
@@ -53,27 +57,82 @@ function Dashboard() {
 
     switch (page) {
 
+      // ================= OVERVIEW =================
       case "overview":
         return (
+
           <Box>
 
             <OverviewCard expenses={expenses} />
-            {/* <PaymentModeChart expenses={expenses} /> */}
-            <Box sx={{ mt: 4 }}>
-              <ExpenseList expenses={latest} />
+
+            {/* HEADER */}
+            <Box
+              sx={{
+                display:"flex",
+                justifyContent:"space-between",
+                alignItems:"center",
+                mt:4,
+                mb:2
+              }}
+            >
+
+              <Typography variant="h5" fontWeight="bold">
+                Latest Expenses
+              </Typography>
+
+              <Box
+                sx={{
+                  background:"#4CAF50",
+                  color:"#fff",
+                  px:3,
+                  py:1,
+                  borderRadius:"30px",
+                  cursor:"pointer",
+                  fontWeight:"bold",
+                  "&:hover":{background:"#43a047"}
+                }}
+                onClick={()=>setShowAddForm(!showAddForm)}
+              >
+                + Add Expense
+              </Box>
+
             </Box>
+
+            {/* ADD EXPENSE FORM */}
+            {showAddForm && (
+              <ExpenseForm addExpense={addExpense}/>
+            )}
+
+            {/* EXPENSE LIST */}
+            <ExpenseList
+              expenses={latest}
+              setExpenses={setExpenses}
+            />
 
           </Box>
         );
 
+      // ================= ADD PAGE =================
       case "add":
-        return <ExpenseForm addExpense={addExpense} />;
+        return (
+          <ExpenseForm
+            addExpense={addExpense}
+          />
+        );
 
+      // ================= ALL EXPENSES =================
       case "latest":
-        return <ExpenseList expenses={latest} />;
+        return (
+          <ExpenseList
+            expenses={expenses}
+            setExpenses={setExpenses}
+          />
+        );
 
+      // ================= MONTHLY =================
       case "monthly":
         return (
+
           <Box>
 
             <Typography variant="h4" mb={2}>
@@ -84,13 +143,18 @@ function Dashboard() {
               ₹{monthlyTotal}
             </Typography>
 
-            <ExpenseChart expenses={monthlyExpenses} />
+            <ExpenseChart
+              expenses={monthlyExpenses}
+            />
 
           </Box>
+
         );
 
+      // ================= YEARLY =================
       case "yearly":
         return (
+
           <Box>
 
             <Typography variant="h4" mb={2}>
@@ -101,9 +165,12 @@ function Dashboard() {
               ₹{yearlyTotal}
             </Typography>
 
-            <ExpenseChart expenses={yearlyExpenses} />
+            <ExpenseChart
+              expenses={yearlyExpenses}
+            />
 
           </Box>
+
         );
 
       default:
@@ -117,22 +184,21 @@ function Dashboard() {
 
     <Box
       sx={{
-        display: "flex",
-        background: "#f5f6fa",
-        minHeight: "100vh"
+        display:"flex",
+        background:"#f5f6fa",
+        minHeight:"100vh"
       }}
     >
 
-      {/* Sidebar */}
+      {/* SIDEBAR */}
       <Sidebar setPage={setPage} />
 
-      {/* Content */}
-
+      {/* MAIN CONTENT */}
       <Box
         sx={{
-          flex: 1,
-          p: 4,
-          maxWidth: "1200px"
+          flex:1,
+          p:4,
+          maxWidth:"1200px"
         }}
       >
 

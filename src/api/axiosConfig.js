@@ -1,25 +1,21 @@
+// authService.js
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://expensetrackingbackend-production.up.railway.app/api",
-  headers: {
-    "Content-Type": "application/json"
-  }
+  baseURL: "https://expensetrackingbackend-production.up.railway.app/api"
 });
 
-
-// Attach JWT token automatically
 api.interceptors.request.use((config) => {
+  const publicRoutes = ["/login", "/signup"];
+  const isPublic = publicRoutes.some(route => config.url.includes(route));
 
-  const token = localStorage.getItem("token");
-  console.log(token);
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (!isPublic) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
-
   return config;
-
 });
 
 export default api;

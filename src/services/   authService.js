@@ -30,21 +30,21 @@ export const signupUser = async (username, password) => {
 // ADD EXPENSE
 export const addExpenseApi = async (expense) => {
 
-  const response = await api.post("/expenses", expense);
+  const response = await api.post("/addExpense", expense);
 
   return response.data;
 
 };
 
 
-// GET ALL EXPENSES
-export const getExpensesApi = async () => {
+// // GET ALL EXPENSES
+// export const getExpensesApi = async () => {
 
-  const response = await api.get("/expenses");
+//   const response = await api.get("/expenses");
 
-  return response.data;
+//   return response.data;
 
-};
+// };
 
 
 // UPDATE EXPENSE

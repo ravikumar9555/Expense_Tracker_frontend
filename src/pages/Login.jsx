@@ -10,30 +10,30 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  // handleLogin
+const handleLogin = async () => {
 
-    try{
+  try {
 
-      const data = await loginUser(username,password);
+    const response = await loginUser(username, password);
 
-      // store token
-      localStorage.setItem("token", data.token);
+    console.log(response);
 
-      // store user data (optional)
-      localStorage.setItem("user", JSON.stringify(data));
+    // store JWT token
+    localStorage.setItem("token", response.token);
 
-      navigate("/dashboard");
+    // store user data
+    localStorage.setItem("user", JSON.stringify(response.data));
 
-    }
-    catch(err){
+    navigate("/dashboard");
 
-      alert("Invalid login");
-      console.log(err)
+  } catch (err) {
 
-    }
+    alert("Invalid login");
 
-  };
+  }
 
+};
   return (
 
     <Box
